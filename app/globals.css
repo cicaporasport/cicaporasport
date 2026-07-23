@@ -52,3 +52,35 @@ main, .container, div[style*="max-width"] {
   max-width: 100% !important;
   margin: 10px auto;
 }
+/* Fix untuk halaman Atlet */
+@media (max-width: 768px) {
+  .athlete-card, 
+  .data-card, 
+  section, 
+  div[class*="card"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 15px;
+    margin: 10px 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .container, main {
+    padding: 10px;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Force full width */
+body, html {
+  width: 100vw;
+  max-width: 100%;
+  overflow-x: hidden;
+}
