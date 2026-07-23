@@ -71,7 +71,7 @@ export default function Home() {
         borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <Image src="/logo.png" alt="Logo Cicapora" width={70} height={70} priority />
+          <img src="/logo.png" alt="Cicapora" style={{ maxWidth: '180px', height: 'auto' }} />
           <div>
             <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>CICAPORA</h1>
             <p style={{ margin: 0, fontSize: '14px', color: '#fb923c' }}>SPORT CLIMBING</p>
