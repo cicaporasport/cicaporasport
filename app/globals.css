@@ -84,3 +84,83 @@ body, html {
   max-width: 100%;
   overflow-x: hidden;
 }
+/* ============== GLOBAL MOBILE FIX ============== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0a1428;
+  color: white;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Logo Dashboard */
+header img, .logo, [class*="logo"] {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Card & Container Full Width */
+.card, 
+.athlete-card, 
+.data-card, 
+section, 
+article, 
+div[class*="card"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 12px auto;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+/* Image */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Text Size */
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.2rem; }
+p, li, span { font-size: 0.95rem; line-height: 1.6; }
+
+/* Grafik & Chart - Stack Vertikal */
+.chart-container, 
+.graph, 
+canvas, 
+.recharts-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 280px !important;
+  margin: 20px 0;
+}
+
+/* Stack 2 kolom jadi 1 di mobile */
+@media (max-width: 768px) {
+  .grid, .flex, [class*="grid"], [class*="flex"] {
+    flex-direction: column !important;
+    gap: 15px;
+  }
+  
+  .data-lengkap {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Force full width */
+main, .container {
+  padding: 10px;
+  width: 100%;
+}
