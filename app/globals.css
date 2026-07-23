@@ -1,4 +1,5 @@
-/* ============== GLOBAL MOBILE FIX ============== */
+/* ============== MOBILE FIRST FIX ============== */
+
 * {
   box-sizing: border-box;
 }
@@ -18,22 +19,32 @@ body {
 }
 
 /* Logo Dashboard */
-header img, .logo, [class*="logo"] {
-  max-width: 200px;
+header img, 
+.logo, 
+[class*="logo"], 
+.CICAPORA-logo {
+  max-width: 180px;
   height: auto;
 }
 
-/* Card & Container Full Width */
+/* Header Fix */
+header, .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* Card Athlete */
 .card, 
 .athlete-card, 
-.data-card, 
-section, 
-article, 
-div[class*="card"] {
+.data-card {
   width: 100% !important;
   max-width: 100% !important;
-  margin: 12px auto;
   padding: 16px;
+  margin: 12px 0;
   border-radius: 12px;
 }
 
@@ -44,37 +55,37 @@ img {
   border-radius: 8px;
 }
 
-/* Text Size */
-h1 { font-size: 1.6rem; }
+/* Text */
+h1 { font-size: 1.6rem; margin-bottom: 12px; }
 h2 { font-size: 1.4rem; }
 h3 { font-size: 1.2rem; }
-p, li, span { font-size: 0.95rem; line-height: 1.6; }
+p, li { font-size: 0.95rem; line-height: 1.6; }
 
-/* Grafik & Chart - Stack Vertikal */
+/* Grafik & Chart */
 .chart-container, 
 .graph, 
 canvas, 
 .recharts-wrapper {
   width: 100% !important;
-  max-width: 100% !important;
-  height: 280px !important;
-  margin: 20px 0;
+  height: 300px !important;
+  margin: 15px 0;
 }
 
-/* Stack 2 kolom jadi 1 di mobile */
+/* Stack everything in mobile */
 @media (max-width: 768px) {
   .grid, .flex, [class*="grid"], [class*="flex"] {
     flex-direction: column !important;
     gap: 15px;
   }
   
-  .data-lengkap {
-    grid-template-columns: 1fr !important;
+  button, .button {
+    width: 100%;
+    margin: 8px 0;
   }
 }
 
 /* Force full width */
-main, .container {
-  padding: 10px;
+main, .container, section {
   width: 100%;
+  padding: 10px;
 }
