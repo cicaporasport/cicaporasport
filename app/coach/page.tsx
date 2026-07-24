@@ -286,6 +286,20 @@ export default function CoachPage() {
     } else {
       alert('Prestasi Atlet berhasil disimpan!');
       setFormPrestasi({ NamaAtlet: '', JenisKejuaraan: '', katagori: '', Tanggal: '', Lokasi: '', Medali: '' });
+      fetchAllData();
+    }
+  };
+
+  // HAPUS PRESTASI
+  const deletePrestasi = async (id: number) => {
+    if (!confirm('Yakin ingin menghapus prestasi ini?')) return;
+
+    const { error } = await supabase.from('prestasi_atlet').delete().eq('id', id);
+    if (error) {
+      alert('Gagal menghapus: ' + error.message);
+    } else {
+      alert('Prestasi berhasil dihapus!');
+      fetchAllData();
     }
   };
 
@@ -490,109 +504,7 @@ export default function CoachPage() {
               </form>
             </div>
 
-            {/* Input Progres Panjat Tebing */}
-            <div style={{ background: '#1e2937', padding: '30px', borderRadius: '16px', marginBottom: '40px' }}>
-              <h2 style={{ color: '#3b82f6' }}>Input Progres Latihan Panjat Tebing Detail</h2>
-              <p style={{ color: '#94a3b8', marginBottom: '20px' }}>Data otomatis per atlet & reset setelah 12 minggu</p>
-
-              <form onSubmit={saveClimbingProgress}>
-                <select value={selectedAtlet} onChange={(e) => setSelectedAtlet(e.target.value)} style={inputStyle} required>
-                  <option value="">-- Pilih Atlet --</option>
-                  {atletList.map((nama, i) => <option key={i} value={nama}>{nama}</option>)}
-                </select>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '15px', marginTop: '15px' }}>
-                  <div><label>Minggu ke-</label><input type="number" value={climbingForm.minggu ?? ''} onChange={(e) => setClimbingForm({...climbingForm, minggu: e.target.value ? parseInt(e.target.value) : 1})} style={inputStyle} /></div>
-                  <div><label>Grade</label><input type="text" placeholder="contoh: 7a+" value={climbingForm.grade ?? ''} onChange={(e) => setClimbingForm({...climbingForm, grade: e.target.value})} style={inputStyle} /></div>
-                  <div><label>Volume</label><input type="number" value={climbingForm.volumeClimbing ?? ''} onChange={(e) => setClimbingForm({...climbingForm, volumeClimbing: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                  <div><label>Sends</label><input type="number" value={climbingForm.sends ?? ''} onChange={(e) => setClimbingForm({...climbingForm, sends: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                  <div><label>Finger Hang 20mm</label><input type="number" value={climbingForm.fingerHang20mm ?? ''} onChange={(e) => setClimbingForm({...climbingForm, fingerHang20mm: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                  <div><label>Weighted Pull-up (kg)</label><input type="number" value={climbingForm.weightedPullupKg ?? ''} onChange={(e) => setClimbingForm({...climbingForm, weightedPullupKg: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                  <div><label>Core Plank (detik)</label><input type="number" value={climbingForm.corePlankSec ?? ''} onChange={(e) => setClimbingForm({...climbingForm, corePlankSec: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                  <div><label>Endurance ARC (menit)</label><input type="number" value={climbingForm.enduranceArcMin ?? ''} onChange={(e) => setClimbingForm({...climbingForm, enduranceArcMin: e.target.value ? parseInt(e.target.value) : 0})} style={inputStyle} /></div>
-                </div>
-
-                <button type="submit" style={{ marginTop: '20px', padding: '14px 30px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>
-                  Simpan Data Minggu Ini
-                </button>
-              </form>
-
-              {selectedAtlet && climbingData[selectedAtlet] && climbingData[selectedAtlet].length > 0 && (
-                <div style={{ marginTop: '30px', background: '#0f172a', padding: '20px', borderRadius: '12px' }}>
-                  <h3 style={{ color: '#f97316' }}>Data Progres Panjat Tebing - {selectedAtlet}</h3>
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-                      <thead>
-                        <tr style={{ background: 'rgba(249,115,22,0.2)' }}>
-                          <th style={{ padding: '8px' }}>Minggu</th><th>Grade</th><th>Volume</th><th>Sends</th>
-                          <th>Finger</th><th>Pull-up</th><th>Core</th><th>Endurance</th><th>Aksi</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {climbingData[selectedAtlet].map((c, index) => (
-                          <tr key={index} style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                            <td style={{ padding: '8px', fontWeight: 'bold' }}>{c.minggu}</td>
-                            <td><strong style={{ color: '#3b82f6' }}>{c.grade}</strong></td>
-                            <td>{c.volumeClimbing}</td><td>{c.sends}</td><td>{c.fingerHang20mm}s</td>
-                            <td>{c.weightedPullupKg}kg</td><td>{c.corePlankSec}s</td><td>{c.enduranceArcMin}min</td>
-                            <td>
-                              <button onClick={() => deleteClimbingWeek(selectedAtlet, c.minggu)} style={{ padding: '4px 10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '6px', fontSize: '12px' }}>
-                                Hapus
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Input Jadwal Latihan Mendatang */}
-            <div style={{ background: '#1e2937', padding: '30px', borderRadius: '16px', marginBottom: '40px' }}>
-              <h2 style={{ color: '#eab308' }}>📅 Input Jadwal Latihan Mendatang</h2>
-              <form onSubmit={saveUpcomingTraining}>
-                <select value={selectedAtlet} onChange={(e) => setSelectedAtlet(e.target.value)} style={inputStyle} required>
-                  <option value="">-- Pilih Atlet --</option>
-                  {atletList.map((nama, i) => <option key={i} value={nama}>{nama}</option>)}
-                </select>
-
-                <input type="date" value={upcomingForm.Tanggal} onChange={(e) => setUpcomingForm({...upcomingForm, Tanggal: e.target.value})} style={inputStyle} required />
-                <select value={upcomingForm.JenisSesi} onChange={(e) => setUpcomingForm({...upcomingForm, JenisSesi: e.target.value})} style={inputStyle} required>
-                  <option value="">Pilih Jenis Sesi</option>
-                  <option value="Bouldering">Bouldering</option>
-                  <option value="Lead Climbing">Lead Climbing</option>
-                  <option value="Technique">Technique Drill</option>
-                  <option value="Endurance">Endurance Training</option>
-                </select>
-                <input type="text" placeholder="Lokasi" value={upcomingForm.Lokasi} onChange={(e) => setUpcomingForm({...upcomingForm, Lokasi: e.target.value})} style={inputStyle} />
-                <textarea placeholder="Catatan" value={upcomingForm.Catatan} onChange={(e) => setUpcomingForm({...upcomingForm, Catatan: e.target.value})} style={{...inputStyle, minHeight: '80px'}} />
-
-                <button type="submit" style={{ marginTop: '15px', padding: '12px 30px', background: '#eab308', color: 'black', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>
-                  Simpan Jadwal Mendatang
-                </button>
-              </form>
-
-              {selectedAtlet && upcomingTrainings.length > 0 && (
-                <div style={{ marginTop: '30px' }}>
-                  <h4>Jadwal Mendatang untuk {selectedAtlet}</h4>
-                  {upcomingTrainings.map((u) => (
-                    <div key={u.id} style={{ background: '#0f172a', padding: '15px', marginBottom: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <strong>{u.tanggal}</strong> — {u.jenis_sesi}<br />
-                        Lokasi: {u.lokasi || '-'} | {u.catatan}
-                      </div>
-                      <button onClick={() => deleteUpcomingTraining(u.id)} style={{ padding: '6px 12px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '6px' }}>
-                        Hapus
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Input Prestasi */}
+            {/* Input Prestasi Atlet */}
             <div style={{ background: '#1e2937', padding: '30px', borderRadius: '16px', marginBottom: '40px' }}>
               <h2>Input Prestasi Atlet</h2>
               <form onSubmit={savePrestasi}>
@@ -604,7 +516,7 @@ export default function CoachPage() {
                 <input type="text" placeholder="Jenis Kejuaraan" value={formPrestasi.JenisKejuaraan} onChange={(e) => setFormPrestasi({...formPrestasi, JenisKejuaraan: e.target.value})} style={inputStyle} required />
                 <input type="date" value={formPrestasi.Tanggal} onChange={(e) => setFormPrestasi({...formPrestasi, Tanggal: e.target.value})} style={inputStyle} required />
                 <input type="text" placeholder="Lokasi Kejuaraan" value={formPrestasi.Lokasi} onChange={(e) => setFormPrestasi({...formPrestasi, Lokasi: e.target.value})} style={inputStyle} />
-                <input type="text" placeholder="katagori" value={formPrestasi.katagori} onChange={(e) => setFormPrestasi({...formPrestasi, katagori: e.target.value})} style={inputStyle} />
+                <input type="text" placeholder="Kategori" value={formPrestasi.katagori} onChange={(e) => setFormPrestasi({...formPrestasi, katagori: e.target.value})} style={inputStyle} />
 
                 <select value={formPrestasi.Medali} onChange={(e) => setFormPrestasi({...formPrestasi, Medali: e.target.value})} style={inputStyle} required>
                   <option value="">-- Pilih Medali --</option>
@@ -617,6 +529,28 @@ export default function CoachPage() {
                   Simpan Prestasi
                 </button>
               </form>
+
+              {/* Daftar Prestasi + Tombol Hapus */}
+              <div style={{ marginTop: '30px' }}>
+                <h3>Daftar Prestasi</h3>
+                {prestasiList.length === 0 ? (
+                  <p>Belum ada prestasi.</p>
+                ) : (
+                  prestasiList.map((p) => (
+                    <div key={p.id} style={{ background: '#0f172a', padding: '15px', marginBottom: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <strong>{p.NamaAtlet}</strong> - {p.JenisKejuaraan} ({p.Medali})
+                      </div>
+                      <button 
+                        onClick={() => deletePrestasi(p.id)}
+                        style={{ padding: '6px 12px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '6px' }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
 
             {/* Riwayat Latihan */}

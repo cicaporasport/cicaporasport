@@ -69,6 +69,7 @@ type PrestasiAtlet = {
   id: number;
   NamaAtlet: string;
   JenisKejuaraan: string;
+  katagori:  string;
   Tanggal: string;
   Lokasi: string;
   Medali: string;
@@ -556,7 +557,7 @@ export default function AthletesPage() {
                     {atletPrestasi.map(p => (
                       <div key={p.id} style={{ background: 'rgba(34,197,94,0.1)', padding: '14px 16px', borderRadius: '12px', border: '1px solid #22c55e', fontSize: '14px' }}>
                         <strong>{p.JenisKejuaraan}</strong><br />
-                        <small>{p.Tanggal} • {p.Lokasi}</small><br />
+                        <small>{p.Tanggal} • {p.katagori} •{p.Lokasi}</small><br />
                         <span style={{ color: '#86efac', fontWeight: 'bold' }}>{p.Medali}</span>
                       </div>
                     ))}
