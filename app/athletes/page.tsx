@@ -300,9 +300,8 @@ export default function AthletesPage() {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    let y = 45; // Mulai lebih atas
+    let y = 45;
 
-    // Header
     doc.setFillColor(10, 20, 40);
     doc.rect(0, 0, pageWidth, 35, 'F');
     doc.setTextColor(255, 255, 255);
@@ -324,7 +323,6 @@ export default function AthletesPage() {
 
     doc.setFontSize(11);
 
-    // Helper wrapping 
     const addWrappedText = (text: string, x: number, maxWidth: number, lineHeight: number = 6) => {
       const lines = doc.splitTextToSize(text, maxWidth);
       lines.forEach((line: string) => {
@@ -340,10 +338,9 @@ export default function AthletesPage() {
       doc.text(label, 20, y);
       const valueText = ': ' + (value || '-');
       addWrappedText(valueText, 80, pageWidth - 100, 6);
-      y += 1; // Jarak pdf
+      y += 1;
     };
 
-    // Biodata
     addLine("Nama Lengkap", selectedAtlet.Nama);
     addLine("Usia", calculateAge(selectedAtlet.TanggalLahir));
     addLine("Jenis Kelamin", selectedAtlet.JenisKelamin);
@@ -355,7 +352,6 @@ export default function AthletesPage() {
     addLine("Riwayat Penyakit", selectedAtlet.RiwayatPenyakit || "Tidak ada");
     y += 8;
 
-    // Prestasi
     if (atletPrestasi.length > 0) {
       if (y > 220) { doc.addPage(); y = 30; }
       doc.setFontSize(14);
@@ -383,7 +379,6 @@ export default function AthletesPage() {
       y += 8;
     }
 
-    // Ringkasan
     if (y > 220) { doc.addPage(); y = 30; }
     doc.setFontSize(14);
     doc.text('RINGKASAN PERFORMA', 20, y);
@@ -396,7 +391,6 @@ export default function AthletesPage() {
     doc.text(`Rata-rata Energy   : ${avgEnergy} / 10`, 20, y); y += 6;
     doc.text(`Rata-rata Fatigue  : ${avgFatigue} / 10`, 20, y); y += 10;
 
-    // Charts
     if (lineRef.current && atletSessions.length > 0) {
       if (y > 180) { doc.addPage(); y = 30; }
       const canvas = await captureWithDelay(lineRef);
@@ -409,7 +403,6 @@ export default function AthletesPage() {
       if (canvas) { doc.addImage(canvas.toDataURL('image/png'), 'PNG', 20, y, 165, 75); y += 82; }
     }
 
-    // Progres Panjat
     if (atletClimbing.length > 0) {
       if (y > 200) { doc.addPage(); y = 30; }
       doc.setFontSize(14);
@@ -444,7 +437,6 @@ export default function AthletesPage() {
       }
     }
 
-    // Riwayat Latihan
     if (y > 200) { doc.addPage(); y = 30; }
     doc.setFontSize(14);
     doc.text('RIWAYAT LATIHAN', 20, y);
@@ -481,29 +473,45 @@ export default function AthletesPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a1428 0%, #1e2937 100%)', color: 'white' }}>
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <div style={{ width: '50px', height: '50px', background: '#f97316', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px' }}>🏔️</div>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>CICAPORA</h1>
-            <p style={{ margin: 0, fontSize: '14px', color: '#fb923c' }}>SPORT CLIMBING</p>
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1428] via-[#1e2937] to-[#0f172a] text-white pb-12">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="max-w-2xl mx-auto px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg">🏔️</div>
+            <div>
+              <h1 className="text-3xl font-bold">CICAPORA</h1>
+              <p className="text-orange-400 text-sm -mt-1">SPORT CLIMBING</p>
+            </div>
           </div>
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="px-6 py-3 border border-orange-400 text-orange-400 rounded-2xl hover:bg-orange-400 hover:text-white transition-all"
+          >
+            Kembali ke Home
+          </button>
         </div>
-        <button onClick={() => window.location.href = '/'} style={{ padding: '10px 20px', background: 'transparent', border: '1px solid #fb923c', color: '#fb923c', borderRadius: '10px' }}>Kembali ke Home</button>
       </nav>
 
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 20px' }}>
-        <h1 style={{ fontSize: '42px', fontWeight: 'bold', textAlign: 'center', marginBottom: '40px' }}>Area Atlet</h1>
+      <div className="max-w-2xl mx-auto px-4 pt-8">
+        <h1 className="text-4xl font-bold text-center mb-10">Area Atlet</h1>
 
         {!selectedAtlet && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {atlets.map((atlet, index) => (
-              <div key={index} onClick={() => setSelectedAtlet(atlet)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(56,189,248,0.3)', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', height: '340px', display: 'flex', flexDirection: 'column' }}>
-                {atlet.Foto ? <img src={atlet.Foto} alt={atlet.Nama} style={{ width: '100%', height: '200px', objectFit: 'cover' }} /> : <div style={{ height: '200px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Photo</div>}
-                <div style={{ padding: '20px', flex: 1 }}>
-                  <h3 style={{ margin: '0 0 8px 0', fontSize: '20px' }}>{atlet.Nama}</h3>
-                  <p style={{ color: '#94a3b8', margin: 0 }}>
+              <div 
+                key={index} 
+                onClick={() => setSelectedAtlet(atlet)} 
+                className="bg-white/5 border border-white/10 hover:border-orange-400 rounded-3xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all h-full flex flex-col"
+              >
+                {atlet.Foto ? (
+                  <img src={atlet.Foto} alt={atlet.Nama} className="w-full h-60 object-cover" />
+                ) : (
+                  <div className="h-60 bg-white/5 flex items-center justify-center text-6xl">🏔️</div>
+                )}
+                <div className="p-6 flex-1">
+                  <h3 className="text-2xl font-semibold mb-2">{atlet.Nama}</h3>
+                  <p className="text-slate-400">
                     {calculateAge(atlet.TanggalLahir)} • {atlet.GolonganDarah}
                   </p>
                 </div>
@@ -513,29 +521,37 @@ export default function AthletesPage() {
         )}
 
         {selectedAtlet && (
-          <div>
-            <button onClick={() => setSelectedAtlet(null)} style={{ padding: '12px 24px', background: 'transparent', border: '1px solid #fb923c', color: '#fb923c', borderRadius: '12px', marginBottom: '30px' }}>
+          <div className="space-y-10">
+            <button 
+              onClick={() => setSelectedAtlet(null)} 
+              className="flex items-center gap-2 text-orange-400 hover:text-white transition font-medium"
+            >
               ← Kembali ke Daftar Atlet
             </button>
 
-            <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '24px', padding: '40px' }}>
-              <div style={{ display: 'flex', gap: '30px', alignItems: 'center', marginBottom: '30px' }}>
-                {selectedAtlet.Foto && <img src={selectedAtlet.Foto} alt="" style={{ width: '160px', borderRadius: '20px' }} />}
-                <div>
-                  <h1 style={{ fontSize: '36px', margin: 0 }}>{selectedAtlet.Nama}</h1>
-                  <p style={{ color: '#94a3b8', fontSize: '18px' }}>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+              <div className="flex flex-col md:flex-row gap-8 items-center mb-8">
+                {selectedAtlet.Foto && (
+                  <img src={selectedAtlet.Foto} alt="" className="w-40 h-40 rounded-2xl object-cover border-4 border-orange-400/30" />
+                )}
+                <div className="flex-1 text-center md:text-left">
+                  <h1 className="text-4xl font-bold">{selectedAtlet.Nama}</h1>
+                  <p className="text-xl text-slate-400 mt-3">
                     {calculateAge(selectedAtlet.TanggalLahir)} • {selectedAtlet.GolonganDarah}
                   </p>
                 </div>
-                <button onClick={downloadPDF} style={{ marginLeft: 'auto', padding: '14px 28px', background: '#38bdf8', color: 'white', border: 'none', borderRadius: '14px', fontWeight: 'bold' }}>
+                <button 
+                  onClick={downloadPDF}
+                  className="mt-6 md:mt-0 px-10 py-4 bg-sky-500 hover:bg-sky-600 rounded-2xl font-bold text-lg w-full md:w-auto transition"
+                >
                   Unduh Laporan PDF
                 </button>
               </div>
 
-              {/* Biodata */}
-              <div style={{ background: 'rgba(255,255,255,0.06)', padding: '28px', borderRadius: '16px', marginBottom: '30px' }}>
-                <h3 style={{ marginBottom: '16px', color: '#fb923c' }}>Data Lengkap Atlet</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {/* Data Lengkap Atlet */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+                <h3 className="text-2xl font-semibold mb-6 text-orange-400">Data Lengkap Atlet</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-lg">
                   <p><strong>Nama:</strong> {selectedAtlet.Nama}</p>
                   <p><strong>Usia:</strong> {calculateAge(selectedAtlet.TanggalLahir)}</p>
                   <p><strong>Jenis Kelamin:</strong> {selectedAtlet.JenisKelamin || '-'}</p>
@@ -544,56 +560,56 @@ export default function AthletesPage() {
                   <p><strong>Tanggal Lahir:</strong> {selectedAtlet.TanggalLahir || '-'}</p>
                   <p><strong>Golongan Darah:</strong> {selectedAtlet.GolonganDarah}</p>
                   <p><strong>Alamat:</strong> {selectedAtlet.Alamat || '-'}</p>
-                  <p style={{ gridColumn: '1 / -1' }}><strong>Riwayat Penyakit:</strong> {selectedAtlet.RiwayatPenyakit || 'Tidak ada'}</p>
+                  <p className="sm:col-span-2"><strong>Riwayat Penyakit:</strong> {selectedAtlet.RiwayatPenyakit || 'Tidak ada'}</p>
                 </div>
               </div>
 
               {/* Prestasi */}
               {atletPrestasi.length > 0 && (
-                <div style={{ marginBottom: '30px' }}>
-                  <h3 style={{ marginBottom: '16px', color: '#22c55e' }}>🏆 Prestasi Atlet</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
+                <div className="mb-10">
+                  <h3 className="text-2xl font-semibold mb-6 text-emerald-400">🏆 Prestasi Atlet</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {atletPrestasi.map(p => (
-                      <div key={p.id} style={{ background: 'rgba(34,197,94,0.1)', padding: '14px 16px', borderRadius: '12px', border: '1px solid #22c55e', fontSize: '14px' }}>
-                        <strong>{p.JenisKejuaraan}</strong><br />
-                        <small>{p.Tanggal} • {p.Lokasi}</small><br />
-                        <span style={{ color: '#86efac', fontWeight: 'bold' }}>{p.Medali}</span>
+                      <div key={p.id} className="bg-emerald-900/30 border border-emerald-500/30 rounded-2xl p-6">
+                        <strong className="text-lg">{p.JenisKejuaraan}</strong><br />
+                        <small className="text-slate-400">{p.Tanggal} • {p.Lokasi}</small><br />
+                        <span className="text-emerald-400 font-bold mt-4 block text-xl">{p.Medali}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Chart  */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '40px' }}>
-                <div ref={lineRef} style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px' }}>
-                  <h3>Tren Energy & Fatigue</h3>
-                  <div style={{ height: '320px' }}>
+              {/* Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                <div ref={lineRef} className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                  <h3 className="text-xl font-semibold mb-4">Tren Energy & Fatigue</h3>
+                  <div className="h-80">
                     {atletSessions.length > 0 ? <Line data={lineData} options={lineOptions} /> : <p>Belum ada data</p>}
                   </div>
                 </div>
-                <div ref={radarRef} style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px' }}>
-                  <h3>8 Unsur Kebugaran Jasmani</h3>
-                  <div style={{ height: '320px' }}>
+                <div ref={radarRef} className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                  <h3 className="text-xl font-semibold mb-4">8 Unsur Kebugaran Jasmani</h3>
+                  <div className="h-80">
                     {totalSessions > 0 ? <Radar data={radarData} options={radarOptions} /> : <p>Belum ada data</p>}
                   </div>
                 </div>
               </div>
 
               {/* Riwayat Latihan */}
-              <div style={{ marginBottom: '40px' }}>
-                <h3>Riwayat Latihan</h3>
+              <div className="mb-10">
+                <h3 className="text-2xl font-semibold mb-6">Riwayat Latihan</h3>
                 {atletSessions.length === 0 ? (
                   <p>Belum ada data latihan.</p>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {atletSessions.map(s => (
-                      <div key={s.id} style={{ background: 'rgba(255,255,255,0.06)', padding: '12px', borderRadius: '10px', fontSize: '13px', lineHeight: '1.4' }}>
-                        <strong style={{ color: '#fb923c' }}>{s.Tanggal}</strong><br />
-                        <span style={{ color: '#e2e8f0' }}>{s.JenisSesi}</span><br />
+                      <div key={s.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 text-sm">
+                        <strong className="text-orange-400">{s.Tanggal}</strong><br />
+                        <span className="text-slate-300">{s.JenisSesi}</span><br />
                         Grade: {s.Grade || '-'} | Energy: {s.EnergyLevel || '-'}<br />
                         Fatigue: {s.Fatigue || '-'}
-                        {s.Catatan && <p style={{ color: '#94a3b8', marginTop: '6px', fontSize: '12px' }}>{s.Catatan.length > 60 ? s.Catatan.substring(0, 60) + '...' : s.Catatan}</p>}
+                        {s.Catatan && <p className="text-slate-400 mt-3 text-xs">{s.Catatan}</p>}
                       </div>
                     ))}
                   </div>
@@ -601,70 +617,65 @@ export default function AthletesPage() {
               </div>
 
               {/* Progres Panjat Tebing */}
-              <div style={{ marginTop: '40px' }}>
-                <h3 style={{ color: '#3b82f6', marginBottom: '16px' }}>🧗 Progres Latihan Panjat Tebing Detail</h3>
-
+              <div className="mb-10">
+                <h3 className="text-2xl font-semibold mb-6 text-blue-400">🧗 Progres Latihan Panjat Tebing Detail</h3>
                 {atletClimbing.length === 0 ? (
-                  <div style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px', textAlign: 'center' }}>
-                    <p>Belum ada data progres panjat tebing.</p>
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center">
+                    Belum ada data progres panjat tebing.
                   </div>
                 ) : (
                   <>
-                    <div style={{ background: 'rgba(255,255,255,0.06)', padding: '20px', borderRadius: '16px', marginBottom: '24px', overflowX: 'auto' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 overflow-x-auto mb-6">
+                      <table className="w-full text-sm">
                         <thead>
-                          <tr style={{ background: 'rgba(59,130,246,0.2)' }}>
-                            <th style={{ padding: '8px' }}>Minggu</th>
-                            <th>Grade</th>
-                            <th>Volume</th>
-                            <th>Sends</th>
-                            <th>Finger (s)</th>
-                            <th>Pull-up (kg)</th>
-                            <th>Core (s)</th>
-                            <th>Endurance</th>
+                          <tr className="bg-blue-900/30">
+                            <th className="p-3 text-left">Minggu</th>
+                            <th className="p-3 text-left">Grade</th>
+                            <th className="p-3 text-left">Volume</th>
+                            <th className="p-3 text-left">Sends</th>
+                            <th className="p-3 text-left">Finger (s)</th>
+                            <th className="p-3 text-left">Pull-up (kg)</th>
+                            <th className="p-3 text-left">Core (s)</th>
+                            <th className="p-3 text-left">Endurance</th>
                           </tr>
                         </thead>
                         <tbody>
                           {atletClimbing.map((c, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                              <td style={{ padding: '8px', fontWeight: 'bold' }}>{c.minggu}</td>
-                              <td><strong style={{ color: '#3b82f6' }}>{c.grade}</strong></td>
-                              <td>{c.volumeClimbing}</td>
-                              <td>{c.sends}</td>
-                              <td>{c.fingerHang20mm}</td>
-                              <td>{c.weightedPullupKg}</td>
-                              <td>{c.corePlankSec}</td>
-                              <td>{c.enduranceArcMin} min</td>
+                            <tr key={i} className="border-b border-white/10">
+                              <td className="p-3 font-bold">{c.minggu}</td>
+                              <td className="p-3"><strong className="text-blue-400">{c.grade}</strong></td>
+                              <td className="p-3">{c.volumeClimbing}</td>
+                              <td className="p-3">{c.sends}</td>
+                              <td className="p-3">{c.fingerHang20mm}</td>
+                              <td className="p-3">{c.weightedPullupKg}</td>
+                              <td className="p-3">{c.corePlankSec}</td>
+                              <td className="p-3">{c.enduranceArcMin} min</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
 
-                    <div ref={climbingRef} style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px', marginBottom: '24px' }}>
-                      <h4>Progres Grade Maksimal</h4>
-                      <div style={{ height: '320px' }}>
-                        <Line data={gradeChartData} options={gradeOptions} />
-                      </div>
+                    <div ref={climbingRef} className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
+                      <h4 className="font-semibold mb-4">Progres Grade Maksimal</h4>
+                      <div className="h-80"><Line data={gradeChartData} options={gradeOptions} /></div>
                     </div>
 
-                    <div ref={strengthChartRef} style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px' }}>
-                      <h4>Kekuatan Jari & Pulling Strength</h4>
-                      <div style={{ height: '320px' }}>
-                        <Line data={strengthChartData} options={strengthOptions} />
-                      </div>
+                    <div ref={strengthChartRef} className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                      <h4 className="font-semibold mb-4">Kekuatan Jari & Pulling Strength</h4>
+                      <div className="h-80"><Line data={strengthChartData} options={strengthOptions} /></div>
                     </div>
                   </>
                 )}
               </div>
 
               {/* Evaluasi & Jadwal */}
-              <div style={{ marginTop: '40px' }}>
-                <h3 style={{ color: '#eab308' }}>📊 Evaluasi & Jadwal Latihan Mendatang</h3>
+              <div className="mb-10">
+                <h3 className="text-2xl font-semibold mb-6 text-yellow-400">📊 Evaluasi & Jadwal Latihan Mendatang</h3>
 
                 {atletClimbing.length > 0 && (
-                  <div style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px', marginBottom: '24px' }}>
-                    <h4>Progress Climbing (Recharts)</h4>
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6">
+                    <h4 className="font-semibold mb-4">Progress Climbing (Recharts)</h4>
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={atletClimbing}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -679,17 +690,17 @@ export default function AthletesPage() {
                   </div>
                 )}
 
-                <div style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px' }}>
-                  <h4>Jadwal Latihan Mendatang</h4>
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
+                  <h4 className="font-semibold mb-4">Jadwal Latihan Mendatang</h4>
                   {upcomingTrainings.length === 0 ? (
                     <p>Belum ada jadwal mendatang untuk atlet ini.</p>
                   ) : (
-                    <div style={{ display: 'grid', gap: '12px' }}>
+                    <div className="space-y-4">
                       {upcomingTrainings.map((u, i) => (
-                        <div key={i} style={{ background: 'rgba(234,179,8,0.1)', padding: '14px', borderRadius: '10px', border: '1px solid #eab308' }}>
+                        <div key={i} className="bg-yellow-900/30 border border-yellow-500/30 rounded-2xl p-5">
                           <strong>{u.tanggal}</strong> — {u.jenis_sesi}<br />
                           Lokasi: {u.lokasi || '-'}<br />
-                          {u.catatan && <small style={{ color: '#94a3b8' }}>{u.catatan}</small>}
+                          {u.catatan && <small className="text-slate-400">{u.catatan}</small>}
                         </div>
                       ))}
                     </div>
@@ -698,21 +709,24 @@ export default function AthletesPage() {
               </div>
 
               {/* Sertifikat */}
-              <div style={{ marginTop: '40px' }}>
-                <h3 style={{ color: '#22c55e', marginBottom: '16px' }}>📜 Sertifikat Atlet</h3>
+              <div>
+                <h3 className="text-2xl font-semibold mb-6 text-emerald-400">📜 Sertifikat Atlet</h3>
                 {certificates.length === 0 ? (
-                  <div style={{ background: 'rgba(255,255,255,0.06)', padding: '24px', borderRadius: '16px', textAlign: 'center' }}>
-                    <p style={{ color: '#94a3b8' }}>Belum ada sertifikat.</p>
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-12 text-center text-slate-400">
+                    Belum ada sertifikat.
                   </div>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {certificates.map((cert) => (
-                      <div key={cert.id} style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid #22c55e', borderRadius: '16px', padding: '20px' }}>
-                        <h4 style={{ margin: '0 0 8px 0', color: '#86efac' }}>{cert.certificate_name}</h4>
-                        <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '12px' }}>
+                      <div key={cert.id} className="bg-emerald-900/30 border border-emerald-500/30 rounded-3xl p-6">
+                        <h4 className="text-lg font-semibold text-emerald-300">{cert.certificate_name}</h4>
+                        <p className="text-sm text-slate-400 mt-1">
                           Di-upload: {new Date(cert.uploaded_at).toLocaleDateString('id-ID')}
                         </p>
-                        <button onClick={() => downloadCertificate(cert.file_url, cert.certificate_name)} style={{ width: '100%', padding: '12px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold' }}>
+                        <button 
+                          onClick={() => downloadCertificate(cert.file_url, cert.certificate_name)} 
+                          className="w-full mt-6 py-3 bg-emerald-500 hover:bg-emerald-600 rounded-2xl font-bold transition"
+                        >
                           📥 Download Sertifikat
                         </button>
                       </div>
