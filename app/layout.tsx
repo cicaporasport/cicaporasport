@@ -1,9 +1,16 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "CICAPORA Sport Climbing",
-  description: "Monitoring Performa Atlet Sport Climbing",
+  title: 'CICAPORA Sport Climbing',
+  description: 'Monitoring Performa Atlet Sport Climbing',
+  icons: {
+    icon: '/icon-512.png',
+    shortcut: '/icon-192.png',
+    apple: '/icon-192.png',
+  },
+  manifest: '/manifest.json',
+  themeColor: '#f97316',
 };
 
 export default function RootLayout({
@@ -14,13 +21,14 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#f97316" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body style={{ 
-        margin: 0, 
-        padding: 0, 
+      <body style={{
+        margin: 0,
+        padding: 0,
         background: '#0a1428',
         color: 'white',
         fontFamily: 'Arial, sans-serif'
