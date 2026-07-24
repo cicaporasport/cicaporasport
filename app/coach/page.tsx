@@ -96,7 +96,7 @@ export default function CoachPage() {
   });
 
   const [formPrestasi, setFormPrestasi] = useState({
-    NamaAtlet: '', JenisKejuaraan: '', katagori:'', Tanggal: '', Lokasi: '', Medali: ''
+    NamaAtlet: '', JenisKejuaraan: '', katagori: '', Tanggal: '', Lokasi: '', Medali: ''
   });
 
   const [selectedAthleteForCert, setSelectedAthleteForCert] = useState('');
@@ -275,7 +275,7 @@ export default function CoachPage() {
   // SAVE PRESTASI
   const savePrestasi = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formPrestasi.NamaAtlet || !formPrestasi.JenisKejuaraan || !formPrestasi.Tanggal || !formPrestasi.Medali) {
+    if (!formPrestasi.NamaAtlet || !formPrestasi.JenisKejuaraan || !formPrestasi.katagori || !formPrestasi.Tanggal || !formPrestasi.Medali) {
       return alert('Mohon isi semua field prestasi!');
     }
 
@@ -285,7 +285,7 @@ export default function CoachPage() {
       alert('Gagal simpan: ' + error.message);
     } else {
       alert('Prestasi Atlet berhasil disimpan!');
-      setFormPrestasi({ NamaAtlet: '', JenisKejuaraan: '', katagori:'', Tanggal: '', Lokasi: '', Medali: '' });
+      setFormPrestasi({ NamaAtlet: '', JenisKejuaraan: '', katagori: '', Tanggal: '', Lokasi: '', Medali: '' });
     }
   };
 
@@ -604,6 +604,7 @@ export default function CoachPage() {
                 <input type="text" placeholder="Jenis Kejuaraan" value={formPrestasi.JenisKejuaraan} onChange={(e) => setFormPrestasi({...formPrestasi, JenisKejuaraan: e.target.value})} style={inputStyle} required />
                 <input type="date" value={formPrestasi.Tanggal} onChange={(e) => setFormPrestasi({...formPrestasi, Tanggal: e.target.value})} style={inputStyle} required />
                 <input type="text" placeholder="Lokasi Kejuaraan" value={formPrestasi.Lokasi} onChange={(e) => setFormPrestasi({...formPrestasi, Lokasi: e.target.value})} style={inputStyle} />
+                <input type="text" placeholder="katagori" value={formPrestasi.katagori} onChange={(e) => setFormPrestasi({...formPrestasi, katagori: e.target.value})} style={inputStyle} />
 
                 <select value={formPrestasi.Medali} onChange={(e) => setFormPrestasi({...formPrestasi, Medali: e.target.value})} style={inputStyle} required>
                   <option value="">-- Pilih Medali --</option>
