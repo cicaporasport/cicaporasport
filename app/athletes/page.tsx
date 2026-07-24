@@ -322,7 +322,7 @@ export default function AthletesPage() {
     y += 8;
 
     if (selectedAtlet.Foto) {
-      try { doc.addImage(selectedAtlet.Foto, 'JPEG', pageWidth - 70, y - 3, 50, 50); } catch (e) {}
+      try { doc.addImage(selectedAtlet.Foto, 'JPEG', pageWidth - 70, y - 3, 37, 37); } catch (e) {}
     }
 
     doc.setFontSize(11);
