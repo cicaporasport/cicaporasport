@@ -43,6 +43,7 @@ type PrestasiAtlet = {
   id: number;
   NamaAtlet: string;
   JenisKejuaraan: string;
+  katagori: string;
   Tanggal: string;
   Lokasi: string;
   Medali: string;
@@ -95,7 +96,7 @@ export default function CoachPage() {
   });
 
   const [formPrestasi, setFormPrestasi] = useState({
-    NamaAtlet: '', JenisKejuaraan: '', Tanggal: '', Lokasi: '', Medali: ''
+    NamaAtlet: '', JenisKejuaraan: '', katagori:'', Tanggal: '', Lokasi: '', Medali: ''
   });
 
   const [selectedAthleteForCert, setSelectedAthleteForCert] = useState('');
@@ -284,7 +285,7 @@ export default function CoachPage() {
       alert('Gagal simpan: ' + error.message);
     } else {
       alert('Prestasi Atlet berhasil disimpan!');
-      setFormPrestasi({ NamaAtlet: '', JenisKejuaraan: '', Tanggal: '', Lokasi: '', Medali: '' });
+      setFormPrestasi({ NamaAtlet: '', JenisKejuaraan: '', katagori:'', Tanggal: '', Lokasi: '', Medali: '' });
     }
   };
 
