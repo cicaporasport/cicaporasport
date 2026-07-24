@@ -298,6 +298,8 @@ export default function AthletesPage() {
   // ==================== DOWNLOAD PDF ====================
   const downloadPDF = async () => {
     if (!selectedAtlet) return;
+    // Loading notification
+    const loadingMsg = alert("Sedang membuat PDF... Mohon tunggu sebentar.");
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -358,31 +360,61 @@ export default function AthletesPage() {
 
     // Prestasi
     if (atletPrestasi.length > 0) {
-      if (y > 220) { doc.addPage(); y = 30; }
-      doc.setFontSize(14);
-      doc.text('PRESTASI ATLET', 20, y);
-      y += 6;
-      doc.line(20, y, pageWidth - 20, y);
-      y += 8;
+      if (y > 200) { doc.addPage(); y = 30; }
 
+      doc.setFontSize(15);
+      doc.text('PRESTASI ATLET', 20, y);
+      y += 8;
+      doc.line(20, y, pageWidth - 20, y);
+      y += 15;
+
+      const colWidth = 62;
       let col = 0;
+      let startY = y;
+
       for (let i = 0; i < atletPrestasi.length; i++) {
         const p = atletPrestasi[i];
-        const xPos = 20 + (col * 58);
-        if (y > 250) { doc.addPage(); y = 30; }
+        const x = 20 + (col * colWidth);
 
+        if (y > 265) {
+          doc.addPage();
+          y = 40;
+          startY = y;
+        }
+
+        doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
-        doc.text(`• ${p.JenisKejuaraan}`, xPos, y);
-        y += 5;
-        doc.text(`  ${p.Tanggal}`, xPos, y);
-        y += 5;
-        addWrappedText(`  ${p.Lokasi} - ${p.Medali}`, xPos, 55, 5);
+        const title = doc.splitTextToSize(`• ${p.JenisKejuaraan}`, colWidth - 5);
+        doc.text(title, x, y);
+        y += title.length * 5.5;
 
-        col++;
-        if (col >= 3) { col = 0; y += 8; }
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9.5);
+        doc.text(p.Tanggal, x, y);
+        y += 5;
+        doc.text(p.katagori, x, y);
+        y += 5;
+
+        const loc = doc.splitTextToSize(p.Lokasi || '-', colWidth - 5);
+        doc.text(loc, x, y);
+        y += loc.length * 5;
+
+        doc.setTextColor(0, 150, 0);
+        doc.text(p.Medali, x, y);
+        doc.setTextColor(0);
+
+        col = (col + 1) % 3;
+
+        if (col === 0) {
+          y = startY + 45; // Jarak antar baris baru
+          startY = y;
+        } else {
+          y = startY;
+        }
       }
-      y += 8;
+      y += 25;
     }
+
 
     // Ringkasan
     if (y > 220) { doc.addPage(); y = 30; }
